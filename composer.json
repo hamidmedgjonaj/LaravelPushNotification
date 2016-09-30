@@ -3,7 +3,7 @@
     "description": "Laravel package to send push notification across all platforms (apns, fcm)",
     "type": "library",
     "license": "MIT",
-    "keywords": ["apns","fcm","push","notification","laravel"],
+    "keywords": ["laravel","apns","fcm","push","notification"],
     "authors": [
         {
             "name": "Hamid Medgjonaj",
