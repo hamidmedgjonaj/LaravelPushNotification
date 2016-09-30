@@ -1,9 +1,9 @@
 {
     "name": "meddev/laravel-push-notification",
-    "description": "Laravel package to send push notification across all platforms",
+    "description": "Laravel package to send push notification across all platforms (apns, fcm)",
     "type": "library",
     "license": "MIT",
-    "keywords": ["laravel"],
+    "keywords": ["apns","fcm","push","notification","laravel"],
     "authors": [
         {
             "name": "Hamid Medgjonaj",
@@ -15,5 +15,7 @@
         "psr-4": {
             "MedDev\\PushNotification\\": "src/"
         }
-    }
+    },
+    "version": "1.0.0",
+    "minimum-stability": "1.0.0"
 }
