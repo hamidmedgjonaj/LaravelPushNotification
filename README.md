@@ -2,7 +2,7 @@
 Add follow line into "require" section in your composer.json:
 
 ```json
-"meddev/laravel-push-notification": "0.*"
+"meddev/laravel-push-notification": "1.0.0"
 ```
 
 Update composer with command:
