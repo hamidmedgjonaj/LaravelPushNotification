@@ -16,6 +16,5 @@
             "MedDev\\PushNotification\\": "src/"
         }
     },
-    "version": "1.0.0",
     "minimum-stability": "dev"
 }
