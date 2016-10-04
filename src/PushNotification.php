@@ -165,7 +165,7 @@ class PushNotification
 	protected function hasTokenTrait($tk)
 	{
 		foreach( class_uses( $tk ) as $t ) {
-			if( $t === 'MedDev\PushNotification\TokenTrait' ){
+			if( $t === 'MedDev\PushNotification\DeviceTrait' ){
 				return true;
 			}
 		}
