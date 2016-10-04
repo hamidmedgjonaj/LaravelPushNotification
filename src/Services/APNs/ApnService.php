@@ -64,7 +64,7 @@ class ApnService implements ServiceInterface
 		];
 
 		if(Config::get('pushnotification.aps.useApi')) {
-			dd("if");
+
 			$url = Config::get('pushnotification.aps.server') . "/3/device/$tokens[0]";
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_POST, true);
