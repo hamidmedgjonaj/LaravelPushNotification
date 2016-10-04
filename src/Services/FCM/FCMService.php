@@ -32,10 +32,10 @@ class FCMService implements ServiceInterface
     	}
 
 		$gcm_message = [
-				"to" 			=> 	$tokens[0],
-				"priority" 		=> 	"high",
-				"time_to_live"	=>	86400,
-				$payload->getFcmType() => $payload->getFcmFormat(),
+				"registration_ids" 		=> 	$tokens,
+				"priority" 				=> 	"high",
+				"time_to_live"			=>	86400,
+				$payload->getFcmType() 	=> $payload->getFcmFormat(),
 		];
 
 		$headers = [
