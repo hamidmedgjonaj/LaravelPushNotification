@@ -2,6 +2,7 @@
 
 namespace MedDev\PushNotification\Services\FCM;
 
+use Illuminate\Support\Facades\Config;
 use MedDev\PushNotification\Services\ServiceInterface;
 use MedDev\PushNotification\Contracts\Payload;
 
@@ -38,7 +39,7 @@ class FCMService implements ServiceInterface
 		];
 
 		$headers = [
-				"Authorization: key=".Config::get('pushnotification.fcm.apiKey'),
+				"Authorization: key=" . Config::get('pushnotification.fcm.apiKey'),
 				"Content-Type: application/json"
 		];
 
