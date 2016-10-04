@@ -16,13 +16,6 @@ class ApnService implements ServiceInterface
 	protected $platform = ['ios'];
 
 	/**
-	 * Default APN service URI
-	 *
-	 * @var string
-	 */
-	protected $uri = 'ssl://gateway.push.apple.com:2195';
-
-	/**
 	 * Is Connected
 	 *
 	 * @var boolean
@@ -55,12 +48,9 @@ class ApnService implements ServiceInterface
 
 		$apn_message = json_encode($payload->getApsFormat());
 
-		$apns_topic  = 'tech.zetta.attoTracking';
-
 		$headers = [
 				"apns-expiration: 86400",
-				"apns-priority: 10",
-				"apns-topic: $apns_topic"
+				"apns-priority: 10"
 		];
 
 		if(Config::get('pushnotification.aps.useApi')) {
@@ -124,7 +114,7 @@ class ApnService implements ServiceInterface
 		 * Open connection with apns server
 		 */
 		$this->socket = stream_socket_client(
-			$this->uri,
+			Config::get('pushnotification.aps.server'),
 			$err,
 			$errstr,
 			60,
@@ -133,7 +123,7 @@ class ApnService implements ServiceInterface
 		);
 
 		if (!$this->socket) {
-			throw new \Exception('Unable to connect with APN service: '.$this->uri.' - '.$err);
+			throw new \Exception('Unable to connect with APN service: '.Config::get('pushnotification.aps.server').' - '.$err);
 		}
 
 		/*
@@ -147,7 +137,7 @@ class ApnService implements ServiceInterface
 	/**
 	 * Close Connection
 	 */
-	public function close()
+	protected function close()
 	{
 		if ($this->isConnected && is_resource($this->socket)) {
 			fclose($this->socket);
@@ -165,6 +155,16 @@ class ApnService implements ServiceInterface
 		}
 
 		return fwrite($this->socket, $payload, strlen($payload));
+	}
+
+	/**
+	 * Destructor
+	 *
+	 * @return void
+	 */
+	public function __destruct()
+	{
+		$this->close();
 	}
 }
 ?>
