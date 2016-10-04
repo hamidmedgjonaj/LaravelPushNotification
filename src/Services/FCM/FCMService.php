@@ -2,7 +2,6 @@
 
 namespace MedDev\PushNotification\Services\FCM;
 
-use Illuminate\Support\Facades\Config;
 use MedDev\PushNotification\Services\ServiceInterface;
 use MedDev\PushNotification\Contracts\Payload;
 
