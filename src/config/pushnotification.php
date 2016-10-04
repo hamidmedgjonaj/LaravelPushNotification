@@ -16,7 +16,8 @@ return [
         /*
     	 * Server used to send push notifications
     	 */
-        "server"  	=> "https://api.development.push.apple.com",
+        "server"  	=> "ssl://gateway.push.apple.com:2195",
+        //"server"  	=> "https://api.development.push.apple.com",
 
         /*
     	 * Set to TRUE if HTTP/2 Is Enabled for Your SSL application

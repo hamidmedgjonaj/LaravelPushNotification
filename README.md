@@ -2,7 +2,7 @@
 Add follow line into "require" section in your composer.json:
 
 ```json
-"meddev/laravel-push-notification": "1.0.0"
+"meddev/laravel-push-notification": "1.0.0.x-dev"
 ```
 
 Update composer with command:
@@ -52,9 +52,10 @@ return [
             "passPhrase"  	=> "",
 
             /*
-        	 * Server used to send push notifications
-        	 */
-            "server"  	=> "https://api.development.push.apple.com",
+             * Server used to send push notifications
+             */
+            "server"  	=> "ssl://gateway.push.apple.com:2195",
+            //"server"  	=> "https://api.development.push.apple.com",
 
             /*
         	 * Set to TRUE if HTTP/2 Is Enabled for Your SSL application
@@ -80,14 +81,14 @@ return [
 Remember to add your FCM api key and PEM certificate path.
 
 #Tokens
-You should have a model to store devices information into your database. To fit your model to be used directly from PushNotification Package you simply need to add `use TokenTrait`:
+You should have a model to store devices information into your database. To fit your model to be used directly from PushNotification Package you simply need to add `use DeviceTrait`:
 
 ```php
-use MedDev\PushNotification\TokenTrait;
+use MedDev\PushNotification\DeviceTrait;
 
 class YourDevicesTable extends Model
 {
-    use TokenTrait;
+    use DeviceTrait;
 }
 ```
 
@@ -135,6 +136,9 @@ class MessagePayload extends Payload
                     "body" 	=> "This is the notification body text",
 				],
 		];
+		
+		//Android notification types can be 'notification' and 'data'
+		$this->fcmPayloadType = "notification";
 		
 		//Android payload format
 		$this->fcmPayload = [
