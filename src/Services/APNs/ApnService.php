@@ -10,7 +10,7 @@ class ApnService implements ServiceInterface
 {
 	/**
 	 * Name of platform
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $platform = ['ios'];
@@ -35,22 +35,22 @@ class ApnService implements ServiceInterface
 	 * @param $tokens
 	 * @return bool|mixed
 	 * @throws \Exception
-     */
+	 */
 	public function send(Payload $payload, $tokens)
 	{
 		if(!is_array($tokens)){
 			throw new \InvalidArgumentException('Tokens must be an array');
 		}
 
-    	if(!count($tokens)>0){
-    		return true;
-    	}
+		if(!count($tokens)>0){
+			return true;
+		}
 
 		$apn_message = json_encode($payload->getApsFormat());
 
 		$headers = [
-				"apns-expiration: 86400",
-				"apns-priority: 10"
+			"apns-expiration: 86400",
+			"apns-priority: 10"
 		];
 
 		if(Config::get('pushnotification.aps.useApi')) {
@@ -93,10 +93,10 @@ class ApnService implements ServiceInterface
 	}
 	/**
 	 * Accessor for platform name
-	 * 
+	 *
 	 * @return string
 	 */
-	public function getPlatform() 
+	public function getPlatform()
 	{
 		return $this->platform;
 	}
@@ -130,8 +130,6 @@ class ApnService implements ServiceInterface
          * Sign it how to connected
          */
 		$this->isConnected = true;
-
-		return $this;
 	}
 
 	/**
@@ -144,8 +142,6 @@ class ApnService implements ServiceInterface
 		}
 
 		$this->isConnected = false;
-
-		return $this;
 	}
 
 	protected function write($payload)
