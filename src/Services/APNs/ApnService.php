@@ -85,16 +85,44 @@ class ApnService implements ServiceInterface
 			$this->connect();
 
 			// Build the binary notification to each token
-			$data = '';
-			foreach($tokens as $tk){
-				$data .= chr(0) . pack('n', 32) . pack('H*', str_replace(' ', '', $tk)) . pack('n', strlen($apn_message)) . $apn_message;
+			foreach($tokens as $token)
+			{
+				$this->connect();
+
+				$innerData =
+					chr(1)
+					. pack('n', 32)
+					. pack('H*', $token)
+
+					. chr(2)
+					. pack('n', strlen($apn_message))
+					. $apn_message
+
+					. chr(3)
+					. pack('n', 4)
+					. chr(1).chr(1).chr(1).chr(1)
+
+					. chr(4)
+					. pack('n', 4)
+					. pack('N', time() + 86400)
+
+					. chr(5)
+					. pack('n', 1)
+					. chr(10);
+
+				$data =
+					chr(2)
+					. pack('N', strlen($innerData))
+					. $innerData;
+
+				$this->write($data);
+
+				// Close connection
+				$this->close();
 			}
-
-			// Send data to the server
-			return $this->write($data);
 		}
-
 	}
+
 	/**
 	 * Accessor for platform name
 	 *
@@ -107,24 +135,25 @@ class ApnService implements ServiceInterface
 
 	protected function connect()
 	{
+		$url = Config::get('pushnotification.aps.server');
+
 		/*
 		 * Socket content creation
 		 */
-		$ctx = stream_context_create();
-		stream_context_set_option($ctx, 'ssl', 'local_cert', Config::get('pushnotification.aps.certificate'));
-		stream_context_set_option($ctx, 'ssl', 'passphrase', Config::get('pushnotification.aps.passPhrase'));
+		$ctx = stream_context_create([
+			'ssl' => [
+				'local_cert' => Config::get('pushnotification.aps.certificate'),
+				'passphrase' => Config::get('pushnotification.aps.passPhrase')
+			]
+		]);
 
 		/*
 		 * Open connection with apns server
 		 */
-		$this->socket = stream_socket_client(
-			Config::get('pushnotification.aps.server'),
-			$err,
-			$errstr,
-			60,
-			STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT,
-			$ctx
-		);
+		$this->socket = @stream_socket_client($url, $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
+
+		stream_set_blocking($this->socket, 0);
+		stream_set_write_buffer($this->socket, 0);
 
 		if (!$this->socket) {
 			throw new \Exception('Unable to connect with APN service: '.Config::get('pushnotification.aps.server').' - '.$err);
@@ -154,7 +183,7 @@ class ApnService implements ServiceInterface
 			throw new \Exception('You must open the connection prior to writing data for APNS server');
 		}
 
-		return fwrite($this->socket, $payload, strlen($payload));
+		return @fwrite($this->socket, $payload, strlen($payload));
 	}
 
 	/**
