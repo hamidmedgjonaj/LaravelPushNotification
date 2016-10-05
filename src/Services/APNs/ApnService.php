@@ -54,25 +54,29 @@ class ApnService implements ServiceInterface
 		];
 
 		if(Config::get('pushnotification.aps.useApi')) {
+			$result = "";
+			foreach($tokens as $token)
+			{
+				$url = Config::get('pushnotification.aps.server') . "/3/device/".$token;
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_POST, true);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $apn_message);
+				curl_setopt($ch, CURLOPT_SSLCERT, Config::get('pushnotification.aps.certificate'));
+				curl_setopt($ch, CURLOPT_SSLCERTPASSWD, Config::get('pushnotification.aps.passPhrase'));
+				curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
 
-			$url = Config::get('pushnotification.aps.server') . "/3/device/$tokens[0]";
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_POST, true);
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $apn_message);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-			curl_setopt($ch, CURLOPT_SSLCERT, Config::get('pushnotification.aps.certificate'));
-			curl_setopt($ch, CURLOPT_SSLCERTPASSWD, Config::get('pushnotification.aps.passPhrase'));
-			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
-			$result = curl_exec($ch);
-			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+				$result = curl_exec($ch);
+				$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-			if ($result === false) {
-				throw new \Exception("Curl failed: " . curl_error($ch));
+				if ($result === false) {
+					throw new \Exception("Curl failed: " . curl_error($ch));
+				}
+				$result .= $result;
+				curl_close($ch);
 			}
-
-			curl_close($ch);
-
 			return $result;
 		}
 		else
