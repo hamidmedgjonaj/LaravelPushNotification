@@ -34,9 +34,7 @@ class PushNotification
 	/**
 	 * Create a new Mailer instance.
 	 *
-	 * @param AbstractPayload $payload
-	 * @param array $tokens
-	 * @param string $queue
+	 * @param $app
 	 */
 	public function __construct($app)
 	{
@@ -47,7 +45,7 @@ class PushNotification
 	/**
 	 * Queue a new push notification for sending.
 	 *
-	 * @param AbstractPayload $payload
+	 * @param $payload
 	 * @param array $tokens
 	 * @param string $queue
 	 */
@@ -85,7 +83,7 @@ class PushNotification
 	 * Send notification to devices tokens
 	 *
 	 * @throws \Exception
-	 * @param AbstractPayload $payload
+	 * @param $payload
 	 * @param array<Model> $tokens
 	 */
 	public function send(Payload $payload, $tokens)
@@ -109,11 +107,10 @@ class PushNotification
 	}
 
 	/**
-	 * Create 1D array for specific platform processed
-	 *
-	 * @param mixed $platform
-	 * @param array $tokens is an array [platform:'xxx', registration_id:'xxxxxx']
-	 */
+	 * @param $platform
+	 * @param $tokens
+	 * @return array
+     */
 	protected function dispatchDeviceToken($platform, $tokens)
 	{
 		$platform_tokens = [];
@@ -147,7 +144,7 @@ class PushNotification
 	/**
 	 * Check if given class use TokenTrait
 	 *
-	 * @param string $name
+	 * @param string $tk
 	 * @return boolean
 	 */
 	protected function hasDeviceTrait($tk)
