@@ -81,12 +81,10 @@ class ApnService implements ServiceInterface
 		}
 		else
 		{
-			//Open connection
-			$this->connect();
-
 			// Build the binary notification to each token
 			foreach($tokens as $token)
 			{
+				//Open connection
 				$this->connect();
 
 				$innerData =
